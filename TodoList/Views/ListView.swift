@@ -8,39 +8,63 @@
 import SwiftUI
 
 struct ListView: View {
-    @State var items: [String] = [
-        "This is the first title",
-        "This is the second title",
-        "This is the third title",
-        "This is the fourth title",
-        "This is the fifth title",
-        "This is the sixth title",
-        "This is the seventh title",
-        "This is the eighth title",
-        "This is the ninth title",
-        "This is the tenth title"
-    ]
+    
+    @EnvironmentObject var listModelView: ListViewModel
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(items, id: \.self) { item in
-                    ListRowView(title: item)
+            VStack {
+                if listModelView.items.isEmpty {
+                    // Show a message if the list is empty
+                    HStack(spacing: 16) {
+                        Image(systemName: "tray.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100, height: 100)
+                            .foregroundColor(.gray)
+                        Text("No tasks available")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                        Text("Start by adding new tasks using the 'Add' button.")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding()
+                } else {
+                    List {
+                        ForEach(listModelView.items) { item in
+                            ListRowView(item: item)
+                                .listRowSeparator(.hidden) // Hide separator for a cleaner look
+                                .padding(.vertical, 1) // Add vertical padding for better spacing
+                        }
+                        .onDelete(perform: listModelView.deleteItem)
+                        .onMove(perform: listModelView.moveItem)
+                    }
+                    .listStyle(PlainListStyle())
                 }
-            }.listStyle(PlainListStyle())
-            .navigationTitle("Todo List ")
+            }
+            .navigationTitle("Todo List")
             .navigationBarItems(
-                leading: EditButton(),
-                trailing: NavigationLink("Add", destination: AddView())
+                leading: EditButton().foregroundColor(.blue),
+                trailing: NavigationLink(
+                    destination: AddView(),
+                    label: {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundColor(.blue)
+                            Text("Add")
+                        }
+                    }
+                )
             )
         }
+        .accentColor(.blue) // Set the global accent color for NavigationView
     }
 }
-
-
 
 #Preview {
     NavigationView {
         ListView()
-    }
+    }.environmentObject(ListViewModel())
 }
