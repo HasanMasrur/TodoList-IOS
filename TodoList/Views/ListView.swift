@@ -16,7 +16,7 @@ struct ListView: View {
             VStack {
                 if listModelView.items.isEmpty {
                     // Show a message if the list is empty
-                    HStack(spacing: 16) {
+                    VStack(spacing: 16) {
                         Image(systemName: "tray.fill")
                             .resizable()
                             .scaledToFit()
@@ -34,7 +34,9 @@ struct ListView: View {
                 } else {
                     List {
                         ForEach(listModelView.items) { item in
-                            ListRowView(item: item)
+                            ListRowView(item: item).onTapGesture {
+                                listModelView.updateItem(item: item)
+                            }
                                 .listRowSeparator(.hidden) // Hide separator for a cleaner look
                                 .padding(.vertical, 1) // Add vertical padding for better spacing
                         }

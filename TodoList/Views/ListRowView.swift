@@ -18,7 +18,7 @@ struct ListRowView: View {
                 .foregroundColor(item.isCompleted ? .gray : .black)
             Spacer()
         }
-        .padding(.vertical, 10) // Minimal vertical padding for compact spacing
+        .padding(  1)
     }
 }
 
@@ -26,5 +26,8 @@ struct ListRowView: View {
     Group {
         ListRowView(item: ItemModel(title: "This is an incomplete task", isCompleted: false))
         ListRowView(item: ItemModel(title: "This is a completed task", isCompleted: true))
+            
     }
 }
+
+
