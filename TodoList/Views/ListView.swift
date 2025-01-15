@@ -13,55 +13,57 @@ struct ListView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            Group {
                 if listModelView.items.isEmpty {
                     // Show a message if the list is empty
-                    VStack(spacing: 16) {
+                    VStack(spacing: 24) {
                         Image(systemName: "tray.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 100, height: 100)
-                            .foregroundColor(.gray)
-                        Text("No tasks available")
-                            .font(.headline)
-                            .foregroundColor(.gray)
-                        Text("Start by adding new tasks using the 'Add' button.")
-                            .font(.subheadline)
+                            .frame(width: 120, height: 120)
+                            .foregroundColor(.gray.opacity(0.6))
+                        Text("No Tasks Available")
+                            .font(.title3.weight(.semibold))
+                            .foregroundColor(.primary.opacity(0.8))
+                        Text("Start by adding new tasks using the 'Add' button below.")
+                            .font(.body)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
+                            .frame(maxWidth: 300)
                     }
-                    .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
+                    // Display the list of items
                     List {
                         ForEach(listModelView.items) { item in
-                            ListRowView(item: item).onTapGesture {
-                                listModelView.updateItem(item: item)
-                            }
-                                .listRowSeparator(.hidden) // Hide separator for a cleaner look
-                                .padding(.vertical, 1) // Add vertical padding for better spacing
+                            ListRowView(item: item)
+                                .onTapGesture {
+                                    listModelView.updateItem(item: item)
+                                }
+                                .padding(.vertical, 8) // Better spacing for rows
                         }
                         .onDelete(perform: listModelView.deleteItem)
                         .onMove(perform: listModelView.moveItem)
                     }
-                    .listStyle(PlainListStyle())
+                    .listStyle(.insetGrouped) // Use a modern list style
                 }
             }
             .navigationTitle("Todo List")
-            .navigationBarItems(
-                leading: EditButton().foregroundColor(.blue),
-                trailing: NavigationLink(
-                    destination: AddView(),
-                    label: {
-                        HStack {
-                            Image(systemName: "plus.circle.fill")
-                                .foregroundColor(.blue)
-                            Text("Add")
-                        }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    EditButton()
+                        .foregroundColor(.blue)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: AddView()) {
+                        Label("Add", systemImage: "plus.circle.fill")
+                            .labelStyle(.titleAndIcon)
+                            .foregroundColor(.blue)
                     }
-                )
-            )
+                }
+            }
         }
-        .accentColor(.blue) // Set the global accent color for NavigationView
+        .accentColor(.blue) // Set the global accent color for the NavigationView
     }
 }
 
