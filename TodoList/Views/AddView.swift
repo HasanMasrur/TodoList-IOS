@@ -31,7 +31,7 @@ struct AddView: View {
                         addItem()
                         
                     }) {
-                        Text("Add")
+                        Text("Save")
                             .frame(maxWidth: .infinity, minHeight: 55)
                             .background(Color.blue)
                             .foregroundColor(.white)
